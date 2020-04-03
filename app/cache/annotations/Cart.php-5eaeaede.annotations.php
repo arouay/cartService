@@ -4,6 +4,7 @@ return array(
   '#namespace' => 'models',
   '#uses' => array (
   'DAO' => 'Ubiquity\\orm\\DAO',
+  'OA' => 'OpenApi\\Annotations',
 ),
   '#traitMethodOverrides' => array (
   'models\\Cart' => 

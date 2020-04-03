@@ -7,6 +7,8 @@ return array(
   'Cart' => 'models\\Cart',
   'DAO' => 'Ubiquity\\orm\\DAO',
   'URequest' => 'Ubiquity\\utils\\http\\URequest',
+  'OA' => 'OpenApi\\Annotations',
+  'DateTime' => 'Ubiquity\\contents\\transformation\\transformers\\DateTime',
 ),
   '#traitMethodOverrides' => array (
   'controllers\\RestCartController' => 
@@ -19,6 +21,10 @@ return array(
   ),
   'controllers\\RestCartController::get' => array(
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getAll","methods"=>["get"])
+  ),
+  'controllers\\RestCartController::getCartByDate' => array(
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'array', 'name' => 'keyValues'),
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getCartByDate/{keyValues}")
   ),
   'controllers\\RestCartController::save' => array(
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/addOne", "methods"=>["post"])

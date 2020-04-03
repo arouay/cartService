@@ -1,19 +1,25 @@
 <?php
 namespace models;
+use OpenApi\Annotations as OA;
+
+
 /**
  * @table('customer')
+ * @OA\Schema()
 */
 class Customer{
 	/**
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
 	 * @validator("id","constraints"=>array("autoinc"=>true))
+     * @OA\Property(type="integer")
 	**/
 	private $id;
 
 	/**
 	 * @column("name"=>"username","nullable"=>false,"dbType"=>"varchar(255)")
 	 * @validator("length","constraints"=>array("max"=>255,"notNull"=>true))
+     * @OA\Property(type="string", nullable=true)
 	**/
 	private $username;
 

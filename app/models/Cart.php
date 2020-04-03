@@ -1,27 +1,32 @@
 <?php
 namespace models;
 use Ubiquity\orm\DAO;
+use OpenApi\Annotations as OA;
 
 /**
  * @table('cart')
+ * @OA\Schema()
 */
 class Cart{
 	/**
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
 	 * @validator("id","constraints"=>array("autoinc"=>true))
+     * @OA\Property(type="integer")
 	**/
 	private $id;
 
 	/**
 	 * @column("name"=>"created","nullable"=>false,"dbType"=>"datetime")
 	 * @validator("type","dateTime","constraints"=>array("notNull"=>true))
+     * @OA\Property(type="string", format="date-time", nullable=true)
 	**/
 	private $created;
 
 	/**
 	 * @manyToOne
 	 * @joinColumn("className"=>"models\\Customer","name"=>"id","nullable"=>false)
+     * @OA\Property(type="object")
 	**/
 	private $customer;
 
@@ -81,8 +86,6 @@ class Cart{
     public static function update($cart){
         return DAO::update($cart);
     }
-
-
 
     public function addItem($item){
 	    if(DAO::save($item)){
