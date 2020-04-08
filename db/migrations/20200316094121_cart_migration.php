@@ -33,8 +33,8 @@ class CartMigration extends AbstractMigration
     {
         $cart = $this->table('cart');
         $cart->addColumn('created', 'datetime')
-            ->addForeignKey('id', 'item', 'id')
-            ->addForeignKey('id', 'customer', 'id')
+            ->addColumn('id_customer', 'integer', ['null'=>true])
+            ->addForeignKey('id_customer', 'customer', 'id',['delete'=> 'SET_NULL', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }

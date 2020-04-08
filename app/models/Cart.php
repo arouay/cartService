@@ -1,45 +1,41 @@
 <?php
 namespace models;
 use Ubiquity\orm\DAO;
-use OpenApi\Annotations as OA;
 
 /**
  * @table('cart')
- * @OA\Schema()
 */
 class Cart{
 	/**
 	 * @id
 	 * @column("name"=>"id","nullable"=>false,"dbType"=>"int(11)")
 	 * @validator("id","constraints"=>array("autoinc"=>true))
-     * @OA\Property(type="integer")
 	**/
 	private $id;
 
 	/**
 	 * @column("name"=>"created","nullable"=>false,"dbType"=>"datetime")
 	 * @validator("type","dateTime","constraints"=>array("notNull"=>true))
-     * @OA\Property(type="string", format="date-time", nullable=true)
 	**/
 	private $created;
-
-	/**
-	 * @manyToOne
-	 * @joinColumn("className"=>"models\\Customer","name"=>"id","nullable"=>false)
-     * @OA\Property(type="object")
-	**/
-	private $customer;
 
 	/**
 	 * @oneToMany("mappedBy"=>"cart","className"=>"models\\Item")
 	**/
 	private $items;
 
+	/**
+	 * @manyToOne
+	 * @joinColumn("className"=>"models\\Customer","name"=>"id_customer","nullable"=>false)
+	**/
+	private $customer;
+
 	function __construct()
     {
+        $this->items = array();
     }
 
-	 public function getId(){
+    public function getId(){
 		return $this->id;
 	}
 
@@ -55,14 +51,6 @@ class Cart{
 		$this->created=$created;
 	}
 
-	 public function getCustomer(){
-		return $this->customer;
-	}
-
-	 public function setCustomer($customer){
-		$this->customer=$customer;
-	}
-
 	 public function getItems(){
 		return $this->items;
 	}
@@ -71,56 +59,87 @@ class Cart{
 		$this->items=$items;
 	}
 
+	 public function getCustomer(){
+		return $this->customer;
+	}
+
+	 public function setCustomer($customer){
+		$this->customer=$customer;
+	}
+
 	 public function __toString(){
 		return ($this->created??'no value').'';
 	}
 
-	public static function save($cart){
-	    return DAO::insert($cart);
+
+    public static function save($cart){
+        return DAO::insert($cart);
     }
 
     public static function delete($id){
-	    return DAO::delete(Cart::class,$id);
+        return DAO::delete(Cart::class,$id);
     }
 
     public static function update($cart){
         return DAO::update($cart);
     }
 
+    public static function getCartsBy($field,$value){
+        $carts = array();
+        if($field === "customer"){
+            foreach (DAO::getAll(Cart::class) as $cart)
+                if($cart->getId() === $value || $cart->getCreated() === $value)
+                    array_push($carts, $cart);
+            return $carts;
+        }else if($field === "id" || $field === "created"){
+            array_push($cats, DAO::getOne(Cart::class, [$field=>$value]));
+            return $carts;
+        }else
+            return null;
+    }
+
+    public function getItemsBy($field, $value){
+        $items = array();
+        foreach ($this->getItems() as $item)
+            if($field === $item->getId() || $field === $item->getLabel() || $field === $item->getQuantity() || $field === $item->getUnitPrice())
+                array_push($items, $item);
+        return $items;
+    }
+
     public function addItem($item){
-	    if(DAO::save($item)){
+        if(DAO::save($item)){
             $item->setCart($this);
             array_push($this->items,$item);
-	        return true;
+            return true;
         }
-	    return false;
+        return false;
     }
     public function removeItem($id){
-	    foreach ($this->items as &$item){
+        foreach ($this->items as &$item){
             if($item->getId() == $id){
                 unset($item);
                 return true;
             }
         }
-	    return false;
+        return false;
     }
     public function updateItem($id,$item){
-	    foreach ($this->items as &$iteration){
-	        if($iteration->getId() == $id){
-	            $iteration = $item;
-	            return true;//found => break
+        foreach ($this->items as &$iteration){
+            if($iteration->getId() == $id){
+                $iteration = $item;
+                return true;//found => break
             }
         }
-	    return false;//not_found
+        return false;//not_found
     }
     public function getTotal(){
-	    $total = 0;
-	    foreach ($this->items as $item){
-	        $total += $item->getUnitPrice();
+        $total = 0;
+        foreach ($this->items as $item){
+            $total += $item->getUnitPrice();
         }
-	    return $total;
+        return $total;
     }
     public function clear(){
-	    reset($this->items);
+        reset($this->items);
     }
 }

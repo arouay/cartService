@@ -3,8 +3,6 @@
 return array(
   '#namespace' => 'models',
   '#uses' => array (
-  'DAO' => 'Ubiquity\\orm\\DAO',
-  'OA' => 'OpenApi\\Annotations',
 ),
   '#traitMethodOverrides' => array (
   'models\\Cart' => 
@@ -23,12 +21,12 @@ return array(
     array('#name' => 'column', '#type' => 'Ubiquity\\annotations\\ColumnAnnotation', "name"=>"created","nullable"=>false,"dbType"=>"datetime"),
     array('#name' => 'validator', '#type' => 'Ubiquity\\annotations\\ValidatorAnnotation', "type","dateTime","constraints"=>array("notNull"=>true))
   ),
-  'models\\Cart::$customer' => array(
-    array('#name' => 'manyToOne', '#type' => 'Ubiquity\\annotations\\ManyToOneAnnotation'),
-    array('#name' => 'joinColumn', '#type' => 'Ubiquity\\annotations\\JoinColumnAnnotation', "className"=>"models\\Customer","name"=>"id","nullable"=>false)
-  ),
   'models\\Cart::$items' => array(
     array('#name' => 'oneToMany', '#type' => 'Ubiquity\\annotations\\OneToManyAnnotation', "mappedBy"=>"cart","className"=>"models\\Item")
+  ),
+  'models\\Cart::$customer' => array(
+    array('#name' => 'manyToOne', '#type' => 'Ubiquity\\annotations\\ManyToOneAnnotation'),
+    array('#name' => 'joinColumn', '#type' => 'Ubiquity\\annotations\\JoinColumnAnnotation', "className"=>"models\\Customer","name"=>"id_customer","nullable"=>false)
   ),
 );
 

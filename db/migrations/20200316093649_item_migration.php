@@ -35,6 +35,8 @@ class ItemMigration extends AbstractMigration
         $item->addColumn('label', 'string')
             ->addColumn('quantity','integer')
             ->addColumn('unitPrice','float')
+            ->addColumn('id_cart', 'integer', ['null'=>true])
+            ->addForeignKey('id_cart', 'cart', 'id')
             ->create();
     }
 }

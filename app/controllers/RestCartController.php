@@ -3,9 +3,9 @@ namespace controllers;
 
 use http\Client\Request;
 use models\Cart;
+use models\Item;
 use Ubiquity\orm\DAO;
 use Ubiquity\utils\http\URequest;
-use OpenApi\Annotations as OA;
 
 
 /**
@@ -16,21 +16,6 @@ use OpenApi\Annotations as OA;
 class RestCartController extends \Ubiquity\controllers\rest\RestController {
     /**
      * @route("/getAll","methods"=>["get"])
-     * @OA\Get(
-     *     path="/rest/carts/getAll",
-     *     @OA\Response(
-     *          response="200",
-     *          description="all carts",
-     *          @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Cart"))
-     *     ),
-     *     @OA\Response(
-     *          response="404",
-     *          description="End-point doesn't exists",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="Url doesn't exists")
-     *          )
-     *     )
-     * )
      */
     public function get(){
         echo $this->_getResponseFormatter()->get(DAO::getAll(Cart::class));
@@ -38,33 +23,13 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
 
     /**
      * @param array $keyValues
-     * @route("/getCartByDate/{keyValues}", "methods"=>["get"])
-     * @OA\Get(
-     *     path="/rest/carts/getCartByDate/{key}",
-     *     @OA\Parameter(
-     *          name="date",
-     *          in="path",
-     *          required=true
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="carts by date",
-     *          @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Cart"))
-     *     ),
-     *     @OA\Response(
-     *          response="404",
-     *          description="Ressource doesn't exists",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="message", type="string", example="There is no cart with such a date")
-     *          )
-     *     )
-     * )
+     * @route("/getCartByDate/{keyValues}", "methods"=>["get"])     
      */
     public function getCartByDate($keyValues){
         $carts = DAO::getAll(Cart::class);
         foreach ($carts as $cart){
             if(strcmp($cart->getCreated(),$keyValues) == 0){
-                echo $cart;
+                echo json_encode($cart);
             }
         }
     }
@@ -77,7 +42,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
             $cart = new Cart();
             URequest::setPostValuesToObject($cart);
             if(Cart::save($cart))
-                echo $cart.' added in database';
+                echo 'cart added in database';
             else
                 echo 'Error adding !';
         }
@@ -100,13 +65,16 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
      */
     public function updateOne($keyValues){
         $cart=DAO::getById(Cart::class,$keyValues);
-        $cart->setCreated(URequest::getDatas()["created"]);
-        $cart->setCustomer(URequest::getDatas()["customer"]);
-        $cart->setItems(URequest::getDatas()["items"]);
-        if(Cart::update($cart))
-            echo "Updated successfully";
-        else
-            echo "Updating ends with errors !";
+        if($cart != null){
+            $cart->setCreated(URequest::getDatas()["created"]);
+            $cart->setCustomer(URequest::getDatas()["customer"]);
+            $cart->setItems(URequest::getDatas()["items"]);
+            if(Cart::update($cart))
+                echo "Updated successfully";
+            else
+                echo "Updating ends with errors !";
+        }else
+            echo "cart does not exists !";
     }
 
     /**
@@ -115,7 +83,11 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
      */
     public function getItemsByCart($keyValues){
         $cart = DAO::getById(Cart::class,$keyValues);
-        echo $cart->getItems();
+        if($cart != null)
+            echo json_encode($cart->getItems());
+        else
+            echo "cart doesn't exists !";
+
     }
 
     /**
@@ -123,21 +95,93 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
      * @route("/getTotalById/{keyValues}", "methods"=>["get"])
      */
     public function getTotalByCart($keyValues){
-        $cart = DAO::getById($keyValues);
-        echo $cart->getTotal();
+        $cart = DAO::getById(Cart::class,$keyValues);
+        if($cart != null)
+            echo $cart->getTotal();
+        else
+            echo "cart doesn't exists !";
     }
 
     /**
      * @param array $keyValues
-     * @route("/clearCartById/{keyValues}", method="put")
+     * @route("/clearCartById/{keyValues}", "methods"=>["put"])
      */
     public function clearCart($keyValues){
-        $cart = DAO::getById($keyValues);
-        $cart->clear();
-        if(Cart::update($cart)){
-            echo 'Cart cleared';
-        }else {
-            echo 'Cart not cleared';
-        }
+        $cart = DAO::getById(Cart::class,$keyValues);
+        if($cart != null){
+            $cart->clear();
+            if(Cart::update($cart))
+                echo 'Cart cleared';
+            else
+                echo 'Cart not cleared';
+        }else
+            echo "cart doesn't exists !";
+    }
+
+    /**
+     * @param integer $idCart
+     * @param integer $idItem
+     * @route("/addItemToCart/{idCart}/{idItem}", "methods"=>["put"])
+     */
+    public function addItemToCart($idCart,$idItem){
+        $cart = DAO::getById(Cart::class,$idCart);
+        if($cart != null){
+            $item = DAO::getById(Item::class,$idItem);
+            if($item != null){
+                $cart->addItem($item);
+                if(Cart::update($cart))
+                    echo 'Item added successfully';
+                else
+                    echo 'Item was not added';
+            }else
+                echo 'Item does not exists !';
+        }else
+            echo "cart does not exists !";
+    }
+
+    /**
+     * @param integer $idCart
+     * @param integer $idItem
+     * @route("/removeItemFromCart/{idCart}/{idItem}", "methods"=>["put"])
+     */
+    public function removeItemFromCart($idCart, $idItem){
+        $cart = DAO::getById(Cart::class,$idCart);
+        if($cart != null){
+            if($cart->removeItem($idItem)){
+                if(Cart::update($cart))
+                    echo 'Item removed successfully';
+                else
+                    echo 'Item was not removed';
+
+            }else
+                echo 'Item does not exists';
+        }else
+            echo "cart does not exists !";
+    }
+
+    /**
+     * @param string $field
+     * @param integer|string $var
+     * @route("/getCartBy/{field}/{var}", "methods"=>["get"])
+     */
+    public function getCartBy($field, $var){
+        if(Cart::getCartsBy($field, $var) != null)
+            echo json_encode(Cart::getCartsBy($field, $var));
+        else
+            echo "Cart doesn't exists";
+    }
+
+    /**
+     * @param integer $idCart
+     * @param string $field
+     * @param integer|string $var
+     * @route("/getItemBy/{idCart}/{field}/{var}", "methods"=>["get"])
+     */
+    public function getItemsBy($idCart, $field, $var){
+        $cart = DAO::getById(Cart::class, $idCart);
+        if($cart != null)
+            echo json_encode($cart->getItemBy($field, $var));
+        else
+            echo "Cart doesn't exists";
     }
 }

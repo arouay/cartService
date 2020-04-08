@@ -29,10 +29,10 @@ class Item{
 	**/
 	private $unitPrice;
 
-    /**
-     * @manyToOne
-     * @joinColumn("className"=>"models\\Cart","name"=>"id","nullable"=>false)
-     **/
+	/**
+	 * @manyToOne
+	 * @joinColumn("className"=>"models\\Cart","name"=>"id_cart","nullable"=>false)
+	**/
 	private $cart;
 
 	 public function getId(){

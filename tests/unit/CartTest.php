@@ -38,4 +38,52 @@ class CartTest extends \Codeception\Test\Unit
         Cart::update($cart);
         $this->assertEquals($cart->getCreated(),DAO::getById(Cart::class,1)->getCreated());
     }
+
+    public function testGetCartsBy(){
+        $field = "customer";
+        $var = "arouay abdelalim";
+        $this->assertNotNull(Cart::getCartsBy($field,$var));
+    }
+
+    public function testGetItemsBy(){
+        $testCart = DAO::getById(Cart::class,1);
+        $testItems = $testCart->getItemsBy("id",1);
+        $this->assertContains($testItems,DAO::getById(\models\Item::class,1));
+    }
+
+    public function testAddItem(){
+        $testItem = DAO::getById(\models\Item::class,1);
+        $testCart = DAO::getById(Cart::class, 1);
+        $testCart->addItem($testItem);
+        Cart::update($testCart);
+        $returnTestCart = DAO::getById(Cart::class, 1);
+        $this->assertNotNull($returnTestCart->getItemsBy("id",1));
+    }
+
+    public function testRemoveItem(){
+        $testCart = DAO::getById(Cart::class, 1);
+        $testCart->removeItem(1);
+        Cart::update($testCart);
+        $returnTestCart = DAO::getById(Cart::class, 1);
+        $this->assertNull($returnTestCart->getItemsBy("id",1));
+    }
+
+    public function testUpdateItem(){
+
+    }
+
+    public function testGetTotal(){
+        $testCart = new Cart();
+        $testItem = new \models\Item();
+        $testItem2 = new \models\Item();
+        $testItem->setUnitPrice(100);
+        $testItem2->setUnitPrice(50.25);
+        $testCart->addItem($testItem);
+        $testCart->addItem($testItem2);
+        $this->assertEquals($testCart->getTotal(), 150.25);
+    }
+
+    public function testClear(){
+
+    }
 }

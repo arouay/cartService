@@ -31,7 +31,7 @@ return array(
   ),
   'models\\Item::$cart' => array(
     array('#name' => 'manyToOne', '#type' => 'Ubiquity\\annotations\\ManyToOneAnnotation'),
-    array('#name' => 'joinColumn', '#type' => 'Ubiquity\\annotations\\JoinColumnAnnotation', "className"=>"models\\Cart","name"=>"id","nullable"=>false)
+    array('#name' => 'joinColumn', '#type' => 'Ubiquity\\annotations\\JoinColumnAnnotation', "className"=>"models\\Cart","name"=>"id_cart","nullable"=>false)
   ),
 );
 
