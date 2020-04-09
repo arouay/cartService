@@ -75,8 +75,8 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
         $cart=DAO::getById(Cart::class,$keyValues);
         if($cart != null){
             $cart->setCreated(URequest::getDatas()["created"]);
-            $cart->setCustomer(URequest::getDatas()["customer"]);//!!!!!!!!!!! SEE LATER
-            $cart->setItems(URequest::getDatas()["items"]);//!!!!!!!!!!!! SEE LATER
+            $cart->setCustomer(DAO::getById(Customer::class,URequest::getDatas()["customer"]));
+
             if(Cart::update($cart))
                 echo "Updated successfully";
             else
