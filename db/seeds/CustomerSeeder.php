@@ -15,11 +15,12 @@ class CustomerSeeder extends AbstractSeed
      */
     public function run()
     {
+        $faker = Faker\Factory::create();
         $data=[];
         for($i = 0; $i<20; $i++){
             $data[] = [
-                'username' => 'Mr custom' . $i,
-                'email' => 'custom'.$i.'@gmail.com'
+                'username' => $faker->userName,
+                'email' => $faker->email
             ];
         }
 

@@ -15,13 +15,11 @@ class CartSeeder extends AbstractSeed
      */
     public function run()
     {
-
+        $faker = Faker\Factory::create();
         $data = [];
         for ($i = 0; $i < 15; $i++) {
             $data[] = [
-                'created'       => date('Y-m-d H:i:s'),
-                'id'      => $i+1,
-                'id'          =>$i+1
+                'created'       => $faker->date("Y-m-d"),
             ];
         }
 

@@ -3,6 +3,7 @@ namespace controllers;
 
 use http\Client\Request;
 use models\Cart;
+use models\Customer;
 use models\Item;
 use Ubiquity\orm\DAO;
 use Ubiquity\utils\http\URequest;
@@ -41,6 +42,13 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
         if(URequest::isPost()){
             $cart = new Cart();
             URequest::setPostValuesToObject($cart);
+            $customer_id = $cart->getCustomer();
+
+            if($cart->getCreated() === null)
+                $cart->setCreated(date("Y-m-d"));
+
+            $cart->setCustomer(DAO::getById(Customer::class, $customer_id));
+
             if(Cart::save($cart))
                 echo 'cart added in database';
             else
@@ -67,8 +75,8 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
         $cart=DAO::getById(Cart::class,$keyValues);
         if($cart != null){
             $cart->setCreated(URequest::getDatas()["created"]);
-            $cart->setCustomer(URequest::getDatas()["customer"]);
-            $cart->setItems(URequest::getDatas()["items"]);
+            $cart->setCustomer(URequest::getDatas()["customer"]);//!!!!!!!!!!! SEE LATER
+            $cart->setItems(URequest::getDatas()["items"]);//!!!!!!!!!!!! SEE LATER
             if(Cart::update($cart))
                 echo "Updated successfully";
             else
@@ -128,9 +136,10 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
         if($cart != null){
             $item = DAO::getById(Item::class,$idItem);
             if($item != null){
-                $cart->addItem($item);
-                if(Cart::update($cart))
+                if($cart->addItem($item))
                     echo 'Item added successfully';
+                else if ($cart->addItem($item) === null)
+                    echo 'No item left !';
                 else
                     echo 'Item was not added';
             }else
@@ -152,7 +161,6 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
                     echo 'Item removed successfully';
                 else
                     echo 'Item was not removed';
-
             }else
                 echo 'Item does not exists';
         }else

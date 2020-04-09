@@ -15,12 +15,13 @@ class ItemSeeder extends AbstractSeed
      */
     public function run()
     {
+        $faker = Faker\Factory::create();
         $data=[];
         for($i = 0; $i<25; $i++){
             $data[] = [
-                'label' => 'item - number : ' . $i,
-                'quantity' => $i+1,
-                'unitPrice' => $i + 1 * 1.25
+                'label' => $faker->company,
+                'quantity' => $faker->randomDigit,
+                'unitPrice' => $faker->randomFloat(5,1000000)
             ];
         }
 

@@ -107,12 +107,13 @@ class Cart{
     }
 
     public function addItem($item){
-        if(DAO::save($item)){
+        if($item->getQuantity() > 0){
             $item->setCart($this);
-            array_push($this->items,$item);
-            return true;
-        }
-        return false;
+            $item->setQuantity($item->getQuantity()-1);
+            return DAO::update($item);
+        }else
+            return null;
+
     }
     public function removeItem($id){
         foreach ($this->items as &$item){

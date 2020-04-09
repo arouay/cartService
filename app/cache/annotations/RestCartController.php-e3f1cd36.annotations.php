@@ -5,6 +5,7 @@ return array(
   '#uses' => array (
   'Request' => 'http\\Client\\Request',
   'Cart' => 'models\\Cart',
+  'Customer' => 'models\\Customer',
   'Item' => 'models\\Item',
   'DAO' => 'Ubiquity\\orm\\DAO',
   'URequest' => 'Ubiquity\\utils\\http\\URequest',
