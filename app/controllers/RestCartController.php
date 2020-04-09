@@ -149,22 +149,23 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
-     * @param integer $idCart
      * @param integer $idItem
-     * @route("/removeItemFromCart/{idCart}/{idItem}", "methods"=>["put"])
+     * @route("/removeItemFromCart/{idItem}", "methods"=>["put"])
      */
-    public function removeItemFromCart($idCart, $idItem){
-        $cart = DAO::getById(Cart::class,$idCart);
-        if($cart != null){
-            if($cart->removeItem($idItem)){
-                if(Cart::update($cart))
+    public function removeItemFromCart($idItem){//set cart_id foreign key to null + increment quantity field in item
+        $item = DAO::getById(Item::class, $idItem);
+        if($item != null){
+            if($item->getCart() != null){
+                $item->setCart(new Cart());
+                $item->setQuantity($item->getQuantity()+1);
+                if(DAO::update($item))
                     echo 'Item removed successfully';
                 else
-                    echo 'Item was not removed';
+                    echo 'Item was not removed !';
             }else
-                echo 'Item does not exists';
+                echo 'Item does not belong to any cart !';
         }else
-            echo "cart does not exists !";
+            echo 'Item does not exists !';
     }
 
     /**

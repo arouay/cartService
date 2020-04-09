@@ -55,9 +55,8 @@ return array(
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/addItemToCart/{idCart}/{idItem}", "methods"=>["put"])
   ),
   'controllers\\RestCartController::removeItemFromCart' => array(
-    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer', 'name' => 'idCart'),
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer', 'name' => 'idItem'),
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/removeItemFromCart/{idCart}/{idItem}", "methods"=>["put"])
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/removeItemFromCart/{idItem}", "methods"=>["put"])
   ),
   'controllers\\RestCartController::getCartBy' => array(
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'string', 'name' => 'field'),
