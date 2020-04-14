@@ -157,7 +157,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
         if($item != null){
             if($item->getCart() != null){
                 $item->setCart(new Cart());
-                $item->setQuantity($item->getQuantity()+1);
+                $item->setQuantity($item->getQuantity()+1);//need to call remove function from cart !!!
                 if(DAO::update($item))
                     echo 'Item removed successfully';
                 else
@@ -189,7 +189,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     public function getItemsBy($idCart, $field, $var){
         $cart = DAO::getById(Cart::class, $idCart);
         if($cart != null)
-            echo json_encode($cart->getItemBy($field, $var));
+            echo json_encode($cart->getItemsBy($field, $var));
         else
             echo "Cart doesn't exists";
     }

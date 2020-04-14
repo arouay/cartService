@@ -141,6 +141,10 @@ class Cart{
         return $total;
     }
     public function clear(){
-        reset($this->items);
+        foreach ($this->getItems() as $item) {
+            $item->setCart(new Cart);
+            $item->setQuantity($item->getQuantity()+1);
+            DAO::update($item);
+        }
     }
 }

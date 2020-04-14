@@ -69,5 +69,8 @@ return array(
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'var'),
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getItemBy/{idCart}/{field}/{var}", "methods"=>["get"])
   ),
+  'controllers\\RestCartController::getConsumedItems' => array(
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "getConsumedItems", "methods"=>["get"])
+  ),
 );
 
