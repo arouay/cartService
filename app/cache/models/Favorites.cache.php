@@ -1,0 +1,2 @@
+<?php
+return array("#tableName"=>"favorites","#primaryKeys"=>array("id"),"#manyToOne"=>array(),"#fieldNames"=>array("id"=>"id","id_customer"=>"id_customer","id_item"=>"id_item"),"#fieldTypes"=>array("id"=>"int(11)","id_customer"=>"int(11)","id_item"=>"int(11)"),"#nullable"=>array(),"#notSerializable"=>array(),"#transformers"=>array(),"#accessors"=>array("id"=>"setId","id_customer"=>"setId_customer","id_item"=>"setId_item"));

@@ -110,6 +110,7 @@ class Cart{
         if($item->getQuantity() > 0){
             $item->setCart($this);
             $item->setQuantity($item->getQuantity()-1);
+            Favorites::addOne($this->customer, $item);
             return DAO::update($item);
         }else
             return null;

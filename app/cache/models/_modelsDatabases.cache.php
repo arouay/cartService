@@ -1,2 +1,2 @@
 <?php
-return array("models\\Cart"=>"default","models\\Customer"=>"default","models\\Item"=>"default","models\\Phinxlog"=>"default");
+return array("models\\Cart"=>"default","models\\Customer"=>"default","models\\Favorites"=>"default","models\\Item"=>"default","models\\Phinxlog"=>"default");
