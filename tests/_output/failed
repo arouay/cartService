@@ -1,1 +1,1 @@
-tests/unit/CartTest.php:testUpdate
+tests/unit/favoriteTest.php:testGetFavoriteItems
