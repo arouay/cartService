@@ -29,6 +29,10 @@ return array(
     array('#name' => 'column', '#type' => 'Ubiquity\\annotations\\ColumnAnnotation', "name"=>"unitPrice","nullable"=>false,"dbType"=>"float"),
     array('#name' => 'validator', '#type' => 'Ubiquity\\annotations\\ValidatorAnnotation', "notNull")
   ),
+  'models\\Item::$vat' => array(
+    array('#name' => 'column', '#type' => 'Ubiquity\\annotations\\ColumnAnnotation', "name"=>"vat", "nullable"=>fals, "dbType"=>"int(11)"),
+    array('#name' => 'validator', '#type' => 'Ubiquity\\annotations\\ValidatorAnnotation', "notNull")
+  ),
   'models\\Item::$cart' => array(
     array('#name' => 'manyToOne', '#type' => 'Ubiquity\\annotations\\ManyToOneAnnotation'),
     array('#name' => 'joinColumn', '#type' => 'Ubiquity\\annotations\\JoinColumnAnnotation', "className"=>"models\\Cart","name"=>"id_cart","nullable"=>false)

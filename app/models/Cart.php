@@ -134,13 +134,25 @@ class Cart{
         }
         return false;//not_found
     }
-    public function getTotal(){
+    public function getSubTotal(){
         $total = 0;
         foreach ($this->items as $item){
-            $total += $item->getUnitPrice();
+            $total += ((float)$item->getUnitPrice() * (int)$item->getQuantity());
         }
         return $total;
     }
+    public function getTotal(){
+	    $total = 0;
+	    foreach ($this->items as $item){
+	        $value = $item->getUnitPrice() * $item->getQuantity();
+	        $total += $value + ($value * $item->getVat() / 100);
+        }
+	    return $total;
+    }
+    public function getTotalVAT(){
+	    return $this->getTotal() - $this->getSubTotal();
+    }
+
     public function clear(){
         foreach ($this->getItems() as $item) {
             $item->setCart(new Cart);

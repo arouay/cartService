@@ -23,8 +23,11 @@ class CartTest extends \Codeception\Test\Unit
         $cart->setCreated("2020-03-12 00:00:00");
         $cart->setCustomer(null);
         $cart->setItems(null);
+
         Cart::save($cart);
-        $this->assertNotNull(DAO::getOne(Cart::class,["created"=>"2020-03-12 00:00:00"]));
+        $this->tester->seeInDatabase('cart', ['created'=>'2009-05-24 00:00:00']);
+
+        //$this->assertNotNull(DAO::getOne(Cart::class,["created"=>"2020-03-12 00:00:00"]));
     }
 
     public function testDelete(){

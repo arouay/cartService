@@ -15,7 +15,30 @@ use Ubiquity\utils\http\URequest;
  * @rest("resource"=>"models\Cart")
  */
 class RestCartController extends \Ubiquity\controllers\rest\RestController {
+//    /**
+//     * This method simulate a connection.
+//     * Send a <b>user</b> variable with <b>POST</b> method to retrieve a valid access token
+//     * @route("methods"=>["post"])
+//     */
+//    public function connect(){
+//        if(!URequest::isCrossSite()){
+//            if(URequest::isPost()){
+//                $user=URequest::post("user");
+//                if(isset($user)){
+//                    $tokenInfos=$this->server->connect ();
+//                    USession::set($tokenInfos['access_token'], $user);
+//                    $tokenInfos['user']=$user;
+//                    echo $this->_format($tokenInfos);
+//                    return;
+//                }
+//            }
+//        }
+//        throw new \Exception('Unauthorized',401);
+//    }
+
+
     /**
+     * @authorization
      * @route("/getAll","methods"=>["get"])
      */
     public function get(){
@@ -23,6 +46,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param array $keyValues
      * @route("/getCartByDate/{keyValues}", "methods"=>["get"])     
      */
@@ -36,6 +60,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @route("/addOne", "methods"=>["post"])
      */
     public function save(){
@@ -57,6 +82,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param array $keyValues
      * @route("/remove/{keyValues}", "methods"=>["delete"])
      */
@@ -68,6 +94,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param array $keyValues
      * @route("/updateOne/{keyValues}", "methods"=>["put"])
      */
@@ -86,6 +113,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param array $keyValues
      * @route("/getItemsByCart/{keyValues}", "methods"=>["get"])
      */
@@ -99,18 +127,26 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param array $keyValues
      * @route("/getTotalById/{keyValues}", "methods"=>["get"])
      */
-    public function getTotalByCart($keyValues){
+    public function getTotal($keyValues){
         $cart = DAO::getById(Cart::class,$keyValues);
-        if($cart != null)
-            echo $cart->getTotal();
+        if($cart != null) {
+            $total = array(
+                "subTotal" => $cart->getSubTotal(),
+                "total" => $cart->getTotal(),
+                "VAT" => $cart->getTotalVAT()
+            );
+            echo json_encode($total);
+        }
         else
             echo "cart doesn't exists !";
     }
 
     /**
+     * @authorization
      * @param array $keyValues
      * @route("/clearCartById/{keyValues}", "methods"=>["put"])
      */
@@ -127,6 +163,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param integer $idCart
      * @param integer $idItem
      * @route("/addItemToCart/{idCart}/{idItem}", "methods"=>["put"])
@@ -149,6 +186,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param integer $idItem
      * @route("/removeItemFromCart/{idItem}", "methods"=>["put"])
      */
@@ -169,6 +207,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param string $field
      * @param integer|string $var
      * @route("/getCartBy/{field}/{var}", "methods"=>["get"])
@@ -181,6 +220,7 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     }
 
     /**
+     * @authorization
      * @param integer $idCart
      * @param string $field
      * @param integer|string $var

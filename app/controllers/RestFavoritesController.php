@@ -10,6 +10,7 @@ use models\Favorites;
  */
 class RestFavoritesController extends \Ubiquity\controllers\rest\RestController {
     /**
+     * @authorization
      * @param integer|string $customer
      * @route("/getFavoriteItemsByCustomer/{customer}", "methods"=>["get"])
      */
@@ -19,6 +20,7 @@ class RestFavoritesController extends \Ubiquity\controllers\rest\RestController 
 
 
     /**
+     * @authorization
      * @param integer|string $idCustomer
      * @param integer|string $idItem
      * @route("/addItemToFavorites/{idCustomer}/{idItem}","methods"=>["post"])
@@ -35,6 +37,7 @@ class RestFavoritesController extends \Ubiquity\controllers\rest\RestController 
     }
 
     /**
+     * @authorization
      * @param integer|string $idCustomer
      * @param integer|string $idItem
      * @route("/removeItemFromFavorites/{idCustomer}/{idItem}","methods"=>["delete"])

@@ -29,6 +29,12 @@ class Item{
 	**/
 	private $unitPrice;
 
+    /**
+     * @column("name"=>"vat", "nullable"=>fals, "dbType"=>"int(11)")
+     * @validator("notNull")
+     */
+	private $vat;
+
 	/**
 	 * @manyToOne
 	 * @joinColumn("className"=>"models\\Cart","name"=>"id_cart","nullable"=>false)
@@ -46,7 +52,12 @@ class Item{
 	 public function getLabel(){
 		return $this->label;
 	}
-
+	public function getVat(){
+	     return $this->vat;
+    }
+    public function setVat($vat){
+	     $this->vat = $vat;
+    }
 	 public function setLabel($label){
 		$this->label=$label;
 	}
