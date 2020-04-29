@@ -12,10 +12,10 @@ class Item{
 	private $id;
 
 	/**
-	 * @column("name"=>"label","nullable"=>false,"dbType"=>"varchar(255)")
+	 * @column("name"=>"description","nullable"=>false,"dbType"=>"varchar(255)")
 	 * @validator("length","constraints"=>array("max"=>255,"notNull"=>true))
 	**/
-	private $label;
+	private $description;
 
 	/**
 	 * @column("name"=>"quantity","nullable"=>false,"dbType"=>"int(11)")
@@ -23,17 +23,11 @@ class Item{
 	**/
 	private $quantity;
 
-	/**
-	 * @column("name"=>"unitPrice","nullable"=>false,"dbType"=>"float")
-	 * @validator("notNull")
-	**/
-	private $unitPrice;
-
     /**
-     * @column("name"=>"vat", "nullable"=>fals, "dbType"=>"int(11)")
-     * @validator("notNull")
+     * @manyToOne
+     * @joinColumn("className"=>"models\\Product","name"=>"id_product","nullable"=>false)
      */
-	private $vat;
+	private $product;
 
 	/**
 	 * @manyToOne
@@ -41,7 +35,52 @@ class Item{
 	**/
 	private $cart;
 
-	 public function getId(){
+    /**
+     * Item constructor.
+     * @param $description
+     * @param $quantity
+     * @param $product
+     * @param $cart
+     */
+    public function __construct($description, $quantity, $product, $cart)
+    {
+        $this->description = $description;
+        $this->quantity = $quantity;
+        $this->product = $product;
+        $this->cart = $cart;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+    }
+
+    public function getCart()
+    {
+        return $this->cart;
+    }
+
+    public function setCart($cart)
+    {
+        $this->cart = $cart;
+    }
+
+    public function getId(){
 		return $this->id;
 	}
 
@@ -49,45 +88,14 @@ class Item{
 		$this->id=$id;
 	}
 
-	 public function getLabel(){
-		return $this->label;
-	}
-	public function getVat(){
-	     return $this->vat;
+    public function getProduct()
+    {
+        return $this->product;
     }
-    public function setVat($vat){
-	     $this->vat = $vat;
+
+    public function setProduct($product)
+    {
+        $this->product = $product;
     }
-	 public function setLabel($label){
-		$this->label=$label;
-	}
-
-	 public function getQuantity(){
-		return $this->quantity;
-	}
-
-	 public function setQuantity($quantity){
-		$this->quantity=$quantity;
-	}
-
-	 public function getUnitPrice(){
-		return $this->unitPrice;
-	}
-
-	 public function setUnitPrice($unitPrice){
-		$this->unitPrice=$unitPrice;
-	}
-
-	 public function getCart(){
-		return $this->cart;
-	}
-
-	 public function setCart($cart){
-		$this->cart=$cart;
-	}
-
-	 public function __toString(){
-		return ($this->unitPrice??'no value').'';
-	}
 
 }

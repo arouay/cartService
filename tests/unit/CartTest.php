@@ -76,14 +76,18 @@ class CartTest extends \Codeception\Test\Unit
     }
 
     public function testGetTotal(){
-        $testCart = new Cart();
-        $testItem = new \models\Item();
-        $testItem2 = new \models\Item();
-        $testItem->setUnitPrice(100);
-        $testItem2->setUnitPrice(50.25);
-        $testCart->addItem($testItem);
-        $testCart->addItem($testItem2);
-        $this->assertEquals($testCart->getTotal(), 150.25);
+        $cart = DAO::getById(Cart::class, 8);
+        $item = DAO::getById(\models\Item::class, 5);
+        $item2 = DAO::getById(\models\Item::class, 2);
+        $item3 = DAO::getById(\models\Item::class, 4);
+
+        $cart->addItem($item);
+        $cart->addItem($item2);
+        $cart->addItem($item3);
+
+        $this->assertEquals(1710, $cart->getSubTotal());
+        $this->assertEquals(1799.3, $cart->getTotal());
+        $this->assertEquals(89.3, $cart->getTotalVAT());
     }
 
     public function testClear(){

@@ -106,15 +106,18 @@ class Cart{
         return $items;
     }
 
-    public function addItem($item){
-        if($item->getQuantity() > 0){
-            $item->setCart($this);
-            $item->setQuantity($item->getQuantity()-1);
-            Favorites::addOne($this->customer, $item);
-            return DAO::update($item);
-        }else
-            return null;
-
+    public function addItem($product, $qte, $desc){
+	    $item = new Item($desc, $qte, $product, $this);
+	    if($product->getQteStock() >= $qte){
+            try {
+                DAO::insert($item);
+                Favorites::addOne($this->customer, $item);
+                return true;
+            } catch (\Exception $e) {
+                echo 'add item error';
+            }
+        }
+	    return false;
     }
     public function removeItem($id){
         foreach ($this->items as &$item){

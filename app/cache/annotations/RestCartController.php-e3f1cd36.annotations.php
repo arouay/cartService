@@ -49,12 +49,9 @@ return array(
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getItemsByCart/{keyValues}", "methods"=>["get"])
   ),
   'controllers\\RestCartController::getTotal' => array(
+    array('#name' => 'authorization', '#type' => 'Ubiquity\\annotations\\rest\\AuthorizationAnnotation'),
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'array', 'name' => 'keyValues'),
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getTotalById/{keyValues}", "methods"=>["get"])
-  ),
-  'controllers\\RestCartController::getSubTotalByCart' => array(
-    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'array', 'name' => 'keyValues'),
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getSubTotalById/{keyValues}", "methods"=>["get"])
   ),
   'controllers\\RestCartController::clearCart' => array(
     array('#name' => 'authorization', '#type' => 'Ubiquity\\annotations\\rest\\AuthorizationAnnotation'),

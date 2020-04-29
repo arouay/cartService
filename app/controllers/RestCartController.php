@@ -165,22 +165,18 @@ class RestCartController extends \Ubiquity\controllers\rest\RestController {
     /**
      * @authorization
      * @param integer $idCart
-     * @param integer $idItem
-     * @route("/addItemToCart/{idCart}/{idItem}", "methods"=>["put"])
+     * @route("/addItemToCart/{idCart}", "methods"=>["post"])
      */
-    public function addItemToCart($idCart,$idItem){
+    public function addItemToCart($idCart){
         $cart = DAO::getById(Cart::class,$idCart);
+        $data = URequest::getDatas();
         if($cart != null){
-            $item = DAO::getById(Item::class,$idItem);
-            if($item != null){
-                if($cart->addItem($item))
-                    echo 'Item added successfully';
-                else if ($cart->addItem($item) === null)
-                    echo 'No item left !';
-                else
-                    echo 'Item was not added';
-            }else
-                echo 'Item does not exists !';
+            if($cart->addItem($data["product"],$data["qte"],$data["desc"]))
+                echo 'Item added successfully';
+            else if ($cart->addItem() === false)
+                echo 'No item left !';
+            else
+                echo 'Item was not added';
         }else
             echo "cart does not exists !";
     }
