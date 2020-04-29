@@ -33,5 +33,11 @@ return array(
     array('#name' => 'manyToOne', '#type' => 'Ubiquity\\annotations\\ManyToOneAnnotation'),
     array('#name' => 'joinColumn', '#type' => 'Ubiquity\\annotations\\JoinColumnAnnotation', "className"=>"models\\Cart","name"=>"id_cart","nullable"=>false)
   ),
+  'models\\Item::__construct' => array(
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation'),
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation'),
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation'),
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation')
+  ),
 );
 

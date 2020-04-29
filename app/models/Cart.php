@@ -98,19 +98,22 @@ class Cart{
             return null;
     }
 
-    public function getItemsBy($field, $value){
+    public function getItemsBy($value){
         $items = array();
         foreach ($this->getItems() as $item)
-            if($field === $item->getId() || $field === $item->getLabel() || $field === $item->getQuantity() || $field === $item->getUnitPrice())
+            if($value === $item->getId() || $value === $item->getDescription())
                 array_push($items, $item);
         return $items;
     }
 
-    public function addItem($product, $qte, $desc){
+    public function addItem($product_id, $qte, $desc){
+	    $product = DAO::getById(Product::class, $product_id);
 	    $item = new Item($desc, $qte, $product, $this);
 	    if($product->getQteStock() >= $qte){
             try {
-                DAO::insert($item);
+                DAO::insert($item);//insert new item
+                $product->setQteStock($product->getQteStock()-$qte);//decrement stock quantity
+                DAO::update($product);//update product
                 Favorites::addOne($this->customer, $item);
                 return true;
             } catch (\Exception $e) {
@@ -119,23 +122,32 @@ class Cart{
         }
 	    return false;
     }
-    public function removeItem($id){
-        foreach ($this->items as &$item){
+    public function removeItem($id){// remove all products in this item
+        foreach ($this->items as $item){
             if($item->getId() == $id){
-                unset($item);
+                $product = DAO::getById(Product::class, $item->getProduct());
+                $product->setQteStock($product->getQteStock()+$item->getQuantity());//increment stock quantity
+                DAO::update($product);
+                DAO::delete(Item::class,$id);
                 return true;
             }
         }
         return false;
     }
-    public function updateItem($id,$item){
-        foreach ($this->items as &$iteration){
-            if($iteration->getId() == $id){
-                $iteration = $item;
-                return true;//found => break
+    public function updateQteItem($id,$qte){// the $qte is considered as absolute value (+/- $qte)
+        foreach ($this->items as $item){
+            if($item->getId() == $id){
+                $product = DAO::getById(Product::class, $item->getProduct());
+                if($product->getQteStock() > $qte){
+                    $item->setQuantity($item->getQuantity() + $qte);
+                    $product->setQteStock($product->getQteStock() - $qte);
+                    DAO::update($product);
+                    DAO::update($item);
+                    return true;//found => break
+                }
             }
         }
-        return false;//not_found
+        return false;
     }
     public function getSubTotal(){
         $total = 0;

@@ -42,13 +42,14 @@ class Item{
      * @param $product
      * @param $cart
      */
-    public function __construct($description, $quantity, $product, $cart)
+    public function __construct($description="", $quantity=0, $product=null, $cart=null)
     {
         $this->description = $description;
         $this->quantity = $quantity;
         $this->product = $product;
         $this->cart = $cart;
     }
+
 
     public function getDescription()
     {
