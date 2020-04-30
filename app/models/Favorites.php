@@ -23,9 +23,9 @@ class Favorites
     private $id_customer;
 
     /**
-     * @column("name"=>"id_item","nullable"=>false,"dbType"=>"int(11)")
+     * @column("name"=>"id_product","nullable"=>false,"dbType"=>"int(11)")
      **/
-    private $id_item;
+    private $id_product;
 
     public function getId(){
         return $this->id;
@@ -39,21 +39,21 @@ class Favorites
     public function setId_customer($id_customer){
         $this->id_customer = $id_customer;
     }
-    public function getId_item(){
-        return $this->id_item;
+    public function getId_product(){
+        return $this->id_product;
     }
-    public function setId_item($id_item){
-        $this->id_item = $id_item;
+    public function setId_product($id_product){
+        $this->id_product = $id_product;
     }
 
-    public static function addOne($customer, $item){
+    public static function addOne($customer, $product){
         $favorite = new Favorites();
         $favorite->setId_customer($customer->getId());
-        $favorite->setId_item($item->getId());
+        $favorite->setId_product($product->getId());
         return DAO::insert($favorite);
     }
 
-    public static function getFavoriteItems($id_customer)
+    public static function getFavoriteProducts($id_customer)
     {
         $favorite_items = array();
         $favorite_items_duplicated = array();
@@ -65,7 +65,7 @@ class Favorites
             foreach ($favorite_items_by_customer as $item) {
                 $cmpt = 0;
                 foreach ($favorite_items_by_customer as $item1) {
-                    if($item->getId_item() === $item1->getId_item()){
+                    if($item->getId_product() === $item1->getId_product()){
                         $cmpt++;
                         if($cmpt >= 10){
                             array_push($favorite_items_duplicated, $item);
@@ -73,9 +73,9 @@ class Favorites
                     }
                 }
             }
-            foreach (DAO::getAll(Item::class) as $item) {
+            foreach (DAO::getAll(Product::class) as $item) {
                 foreach ($favorite_items_duplicated as $item1) {
-                    if($item->getId() === $item1->getId_item()){
+                    if($item->getId() === $item1->getId_product()){
                         $exist = false;
                         foreach ($favorite_items as $item2) {
                             if($item2->getId() === $item->getId()){
@@ -94,33 +94,33 @@ class Favorites
         return $favorite_items;
     }
 
-    public static function addFavoriteItemManually($id_customer, $id_item){
+    public static function addProductToFavorites($id_customer, $id_product){
         $flag = null;
         $customer = DAO::getOne(Customer::class, ["username" => $id_customer]);
-        $item = DAO::getOne(Item::class, ["label" => $id_item]);
-        if($customer === null || $item === null){
+        $product = DAO::getOne(Product::class, ["name" => $id_product]);
+        if($customer === null || $product === null){
             $customer = DAO::getById(Customer::class, $id_customer);
-            $item = DAO::getById(Item::class, $id_item);
+            $product = DAO::getById(Item::class, $id_product);
         }
-        if($customer !== null && $item !== null){
+        if($customer !== null && $product !== null){
             for($i=0; $i<10; $i++){// should be at least 10 occurrences to be considered as favorite
-                $flag = Favorites::addOne($customer,$item);
+                $flag = Favorites::addOne($customer,$product);
             }
         }
         return $flag;
     }
-    public static function removeItemFromFavorites($id_customer, $id_item){// id_customer -> to remove favorite items proper to a specific customer
+    public static function removeProductFromFavorites($id_customer, $id_product){// id_customer -> to remove favorite items proper to a specific customer
         $flag = null;
 
         $customer = DAO::getOne(Customer::class, ["username" => $id_customer]);
-        $item = DAO::getOne(Item::class, ["label" => $id_item]);
-        if($customer === null || $item === null){
+        $product = DAO::getOne(Product::class, ["name" => $id_product]);
+        if($customer === null || $product === null){
             $customer = DAO::getById(Customer::class, $id_customer);
-            $item = DAO::getById(Item::class, $id_item);
+            $product = DAO::getById(Product::class, $id_product);
         }
-        if($customer !== null && $item !== null){
+        if($customer !== null && $product !== null){
             foreach (DAO::getAll(Favorites::class) as $favorite){
-                if($favorite->getId_customer() === $customer->getId() && $favorite->getId_item() === $item->getId()){
+                if($favorite->getId_customer() === $customer->getId() && $favorite->getId_product() === $product->getId()){
                     $flag = DAO::delete(Favorites::class, $favorite->getId());
                 }
             }

@@ -114,7 +114,7 @@ class Cart{
                 DAO::insert($item);//insert new item
                 $product->setQteStock($product->getQteStock()-$qte);//decrement stock quantity
                 DAO::update($product);//update product
-                Favorites::addOne($this->customer, $item);
+                Favorites::addOne($this->customer, $product);
                 return true;
             } catch (\Exception $e) {
                 echo 'add item error';
@@ -152,15 +152,17 @@ class Cart{
     public function getSubTotal(){
         $total = 0;
         foreach ($this->items as $item){
-            $total += ((float)$item->getUnitPrice() * (int)$item->getQuantity());
+            $product = DAO::getById(Product::class, $item->getProduct());
+            $total += ((float)$product->getUnitPrice() * (int)$item->getQuantity());
         }
         return $total;
     }
     public function getTotal(){
 	    $total = 0;
 	    foreach ($this->items as $item){
-	        $value = $item->getUnitPrice() * $item->getQuantity();
-	        $total += $value + ($value * $item->getVat() / 100);
+            $product = DAO::getById(Product::class, $item->getProduct());
+	        $value = $product->getUnitPrice() * $item->getQuantity();
+	        $total += $value + ($value * $product->getVat() / 100);
         }
 	    return $total;
     }
@@ -170,9 +172,7 @@ class Cart{
 
     public function clear(){
         foreach ($this->getItems() as $item) {
-            $item->setCart(new Cart);
-            $item->setQuantity($item->getQuantity()+1);
-            DAO::update($item);
+            $this->removeItem($item->getId());
         }
     }
 }

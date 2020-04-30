@@ -12,21 +12,21 @@ class RestFavoritesController extends \Ubiquity\controllers\rest\RestController 
     /**
      * @authorization
      * @param integer|string $customer
-     * @route("/getFavoriteItemsByCustomer/{customer}", "methods"=>["get"])
+     * @route("/getFavoriteProductsByCustomer/{customer}", "methods"=>["get"])
      */
-    public function getFavoriteItemsByCustomer($customer){
-        echo $this->getResponseFormatter()->get(Favorites::getFavoriteItems($customer));
+    public function getFavoriteProductsByCustomer($customer){
+        echo $this->getResponseFormatter()->get(Favorites::getFavoriteProducts($customer));
     }
 
 
     /**
      * @authorization
      * @param integer|string $idCustomer
-     * @param integer|string $idItem
-     * @route("/addItemToFavorites/{idCustomer}/{idItem}","methods"=>["post"])
+     * @param integer|string $idProduct
+     * @route("/addProduct/{idProduct}/toFavorites/{idCustomer}","methods"=>["post"])
      */
-    public function addItemToFavorites($idCustomer, $idItem){
-        $result = Favorites::addFavoriteItemManually($idCustomer,$idItem);
+    public function addProductToFavorites($idCustomer, $idProduct){
+        $result = Favorites::addProductToFavorites($idCustomer,$idProduct);
         if($result != null)
             if($result != false)
                 echo "Item manually added to favorites successfully";
@@ -39,11 +39,11 @@ class RestFavoritesController extends \Ubiquity\controllers\rest\RestController 
     /**
      * @authorization
      * @param integer|string $idCustomer
-     * @param integer|string $idItem
-     * @route("/removeItemFromFavorites/{idCustomer}/{idItem}","methods"=>["delete"])
+     * @param integer|string $idProduct
+     * @route("/removeProduct/{idProduct}/fromFavorites/{idCustomer}","methods"=>["delete"])
      */
-    public function removeItemFromFavorites($idCustomer, $idItem){
-        $result = Favorites::removeItemFromFavorites($idCustomer,$idItem);
+    public function removeProductFromFavorites($idCustomer, $idProduct){
+        $result = Favorites::removeProductFromFavorites($idCustomer,$idProduct);
         if($result != null)
             if($result)
                 echo "Item removed from favorites successfully";

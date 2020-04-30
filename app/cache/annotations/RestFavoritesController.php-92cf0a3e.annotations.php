@@ -14,22 +14,22 @@ return array(
     array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/rest/favorites","inherited"=>true,"automated"=>true),
     array('#name' => 'rest', '#type' => 'Ubiquity\\annotations\\rest\\RestAnnotation', "resource"=>"models\Favorites")
   ),
-  'controllers\\RestFavoritesController::getFavoriteItemsByCustomer' => array(
+  'controllers\\RestFavoritesController::getFavoriteProductsByCustomer' => array(
     array('#name' => 'authorization', '#type' => 'Ubiquity\\annotations\\rest\\AuthorizationAnnotation'),
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'customer'),
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getFavoriteItemsByCustomer/{customer}", "methods"=>["get"])
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/getFavoriteProductsByCustomer/{customer}", "methods"=>["get"])
   ),
-  'controllers\\RestFavoritesController::addItemToFavorites' => array(
+  'controllers\\RestFavoritesController::addProductToFavorites' => array(
     array('#name' => 'authorization', '#type' => 'Ubiquity\\annotations\\rest\\AuthorizationAnnotation'),
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'idCustomer'),
-    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'idItem'),
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/addItemToFavorites/{idCustomer}/{idItem}","methods"=>["post"])
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'idProduct'),
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/addProduct/{idProduct}/toFavorites/{idCustomer}","methods"=>["post"])
   ),
-  'controllers\\RestFavoritesController::removeItemFromFavorites' => array(
+  'controllers\\RestFavoritesController::removeProductFromFavorites' => array(
     array('#name' => 'authorization', '#type' => 'Ubiquity\\annotations\\rest\\AuthorizationAnnotation'),
     array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'idCustomer'),
-    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'idItem'),
-    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/removeItemFromFavorites/{idCustomer}/{idItem}","methods"=>["delete"])
+    array('#name' => 'param', '#type' => 'mindplay\\annotations\\standard\\ParamAnnotation', 'type' => 'integer|string', 'name' => 'idProduct'),
+    array('#name' => 'route', '#type' => 'Ubiquity\\annotations\\router\\RouteAnnotation', "/removeProduct/{idProduct}/fromFavorites/{idCustomer}","methods"=>["delete"])
   ),
 );
 

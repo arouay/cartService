@@ -21,8 +21,8 @@ return array(
   'models\\Favorites::$id_customer' => array(
     array('#name' => 'column', '#type' => 'Ubiquity\\annotations\\ColumnAnnotation', "name"=>"id_customer","nullable"=>false,"dbType"=>"int(11)")
   ),
-  'models\\Favorites::$id_item' => array(
-    array('#name' => 'column', '#type' => 'Ubiquity\\annotations\\ColumnAnnotation', "name"=>"id_item","nullable"=>false,"dbType"=>"int(11)")
+  'models\\Favorites::$id_product' => array(
+    array('#name' => 'column', '#type' => 'Ubiquity\\annotations\\ColumnAnnotation', "name"=>"id_product","nullable"=>false,"dbType"=>"int(11)")
   ),
 );
 
