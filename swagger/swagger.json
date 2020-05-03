@@ -639,6 +639,71 @@
                 }
             }
         },
+        "/addQuantity/{qte}/toItem/{idItem}/inCart/{idCart}": {
+            "put": {
+                "operationId": "controllers\\RestCartController::updateQteItem",
+                "parameters": [
+                    {
+                        "name": "qte",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": "2"
+                        }
+                    },
+                    {
+                        "name": "idItem",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "idCart",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Cart"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ressource doesn't exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Route invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/carts/updateOne/": {
             "put": {
                 "operationId": "controllers\\RestCartController::updateOne",
