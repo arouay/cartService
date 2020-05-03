@@ -55,39 +55,70 @@ class CartTest extends \Codeception\Test\Unit
     }
 
     public function testAddItem(){
-        $testItem = DAO::getById(\models\Item::class,1);
-        $testCart = DAO::getById(Cart::class, 1);
-        $testCart->addItem($testItem);
-        Cart::update($testCart);
-        $returnTestCart = DAO::getById(Cart::class, 1);
-        $this->assertNotNull($returnTestCart->getItemsBy("id",1));
+        $cart = DAO::getById(Cart::class, 1);
+        $cart->addItem(1,2,"testing description");
+        $this->tester->seeInDatabase('item', ['description'=>'testing description']);
     }
 
     public function testRemoveItem(){
-        $testCart = DAO::getById(Cart::class, 1);
-        $testCart->removeItem(1);
-        Cart::update($testCart);
-        $returnTestCart = DAO::getById(Cart::class, 1);
-        $this->assertNull($returnTestCart->getItemsBy("id",1));
+        $cart = DAO::getById(Cart::class,1);
+        $item = DAO::getOne(\models\Item::class, ['description'=>'testing description']);
+        if($item != null){
+            $cart->removeItem($item);
+            $this->tester->cantSeeInDatabase(\models\Item::class,['id'=>$item->getId()]);
+        }
+        $this->assertNotNull($item,["Item does not exist"]);
     }
 
-    public function testUpdateItem(){
-
+    public function testUpdateQteItem(){
+        $cart = DAO::getById(Cart::class,1);
+        $item = DAO::getOne(\models\Item::class, ['description'=>'testing description']);
+        if($item != null){
+            $oldQte = $item->getQuantity();
+            $cart->updateQteItem($item->getId(),2);
+            $this->tester->canSeeInDatabase(\models\Item::class,['id'=>$item->getId(), 'quantity'=>$oldQte + 2]);
+        }
+        $this->assertNotNull($item,["Item does not exist"]);
     }
 
     public function testGetTotal(){
-        $cart = DAO::getById(Cart::class, 8);
-        $item = DAO::getById(\models\Item::class, 5);
-        $item2 = DAO::getById(\models\Item::class, 2);
-        $item3 = DAO::getById(\models\Item::class, 4);
+        //new cart
+        $cart = new Cart();
+        $cart->setCreated("3030-06-06 00:00:00");
+        Cart::save($cart);
+        $cart = DAO::getOne(Cart::class,['created'=>'3030-06-06 00:00:00']);// to obtain the id
 
-        $cart->addItem($item);
-        $cart->addItem($item2);
-        $cart->addItem($item3);
+        //add products of test
+        $product1 = new \models\Product();
+        $product2 = new \models\Product();
+        $product1->setName("testp1");
+        $product1->setQteStock(2);
+        $product1->setUnitPrice(150);
+        $product1->setVat(6);
+        $product1->setName("testp2");
+        $product2->setQteStock(1);
+        $product1->setUnitPrice(1000);
+        $product2->setVat(2.5);
+        DAO::insert($product1);
+        DAO::insert($product2);
+        $product1 = DAO::getOne(\models\Product::class, ["name"=>"testp1"]);
+        $product2 = DAO::getOne(\models\Product::class, ["name"=>"testp2"]);//to get products with their ids
 
-        $this->assertEquals(1710, $cart->getSubTotal());
-        $this->assertEquals(1799.3, $cart->getTotal());
-        $this->assertEquals(89.3, $cart->getTotalVAT());
+        //add items to cart
+        $cart->addItem($product1, 2, "item for test 1");
+        $cart->addItem($product2, 1, "item for test 1");
+
+        //test
+        $this->assertEquals(1300, $cart->getSubTotal());
+        $this->assertEquals(1343, $cart->getTotal());
+        $this->assertEquals(43, $cart->getTotalVAT());
+
+        //delete cart
+        Cart::delete($cart->getId());
+
+        //delete test's products
+        DAO::delete(\models\Product::class, $product1->getId());
+        DAO::delete(\models\Product::class, $product2->getId());
     }
 
     public function testClear(){

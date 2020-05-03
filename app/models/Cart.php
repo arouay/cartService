@@ -114,7 +114,7 @@ class Cart{
                 DAO::insert($item);//insert new item
                 $product->setQteStock($product->getQteStock()-$qte);//decrement stock quantity
                 DAO::update($product);//update product
-                Favorites::addOne($this->customer, $product);
+                                    Favorites::addOne($this->customer, $product);
                 return true;
             } catch (\Exception $e) {
                 echo 'add item error';
